@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>המילים של יעל</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#E8F1FF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Rubik:wght@400;500;700&display=swap">
+<style>
+/* Layout: one-screen phone app, 480px column, chunky game buttons near the thumb, notebook-dot sky background */
+:root{
+  --bg:#E8F1FF; --dot:#cddbf6; --card:#ffffff; --ink:#18223d; --muted:#56637f; --line:#c6d4ee;
+  --accent:#ff5a36; --accent-d:#cc3a19; --sky:#3d7bff;
+  --good:#11995b; --good-bg:#d9f6e8; --bad:#d9303f; --bad-bg:#fde2e4; --sun:#f5a800; --learn:#ff9f1c; --new:#b9c4da;
+  --f-disp:'Fredoka','Rubik',system-ui,sans-serif; --f-body:'Rubik',system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1730; --dot:#1c2850; --card:#1a2443; --ink:#eef2ff; --muted:#a2adcc; --line:#2c3a66;
+  --accent:#ff6a48; --accent-d:#b93c1d; --sky:#6b9bff;
+  --good:#34d08a; --good-bg:#103a28; --bad:#ff5d6a; --bad-bg:#46161d; --sun:#ffc444; --learn:#ffae3d; --new:#3a4770;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1730; --dot:#1c2850; --card:#1a2443; --ink:#eef2ff; --muted:#a2adcc; --line:#2c3a66;
+  --accent:#ff6a48; --accent-d:#b93c1d; --sky:#6b9bff;
+  --good:#34d08a; --good-bg:#103a28; --bad:#ff5d6a; --bad-bg:#46161d; --sun:#ffc444; --learn:#ffae3d; --new:#3a4770;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:var(--bg);background-image:radial-gradient(var(--dot) 1.5px,transparent 1.6px);background-size:22px 22px;
+  color:var(--ink);font:16px/1.45 var(--f-body);-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;
+  padding-block:14px 18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.screen{display:flex;flex-direction:column;gap:14px;flex:1}
+[hidden]{display:none!important}
+[lang=en]{font-family:var(--f-disp)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:18px}
+.btn{display:block;width:100%;padding:16px;border-radius:18px;font:600 1.25rem var(--f-disp);transition:transform .08s}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 5px 0 var(--accent-d)}
+.btn.primary:active{transform:translateY(4px);box-shadow:0 1px 0 var(--accent-d)}
+.btn.ghost{background:transparent;border:2px solid var(--line);color:var(--muted);font-size:1.05rem;padding:12px}
+
+/* home */
+.hero{padding-top:8px}
+.eyebrow{margin:0;color:var(--muted);font-size:.85rem;letter-spacing:.02em}
+h1{margin:2px 0 0;font:700 2.4rem/1.1 var(--f-disp);text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.big{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.big b{font:700 3rem/1 var(--f-disp);color:var(--good);font-variant-numeric:tabular-nums}
+.big span{color:var(--muted)}
+.bar{display:flex;height:14px;border-radius:99px;background:var(--new);overflow:hidden;margin:14px 0 10px}
+.bar i{display:block;height:100%;transition:width .5s}
+.bar .m{background:var(--good)} .bar .l{background:var(--learn)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.9rem;color:var(--muted)}
+.legend b{color:var(--ink);font-variant-numeric:tabular-nums}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:5px;vertical-align:middle}
+.dot.m{background:var(--good)} .dot.l{background:var(--learn)} .dot.n{background:var(--new)}
+.meta{display:flex;justify-content:space-between;gap:10px;margin-top:14px;padding-top:12px;border-top:2px dashed var(--line);font-size:.95rem}
+.meta b{font-variant-numeric:tabular-nums}
+.hint{margin:0;color:var(--muted);font-size:.9rem;text-align:center;text-wrap:balance}
+details.words summary{font:600 1.1rem var(--f-disp);list-style:none;display:flex;justify-content:space-between}
+details.words summary::after{content:"▾";color:var(--muted)}
+details[open].words summary::after{content:"▴"}
+.wlist{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{display:flex;gap:6px;align-items:baseline;padding:5px 10px;border-radius:12px;border:2px solid var(--line);font-size:.9rem}
+.chip [lang=en]{font-weight:600}
+.chip span:last-child{color:var(--muted);font-size:.82rem}
+.chip.m{border-color:var(--good);background:var(--good-bg)}
+.chip.l{border-color:var(--learn)}
+.reset{text-align:center;font-size:.85rem;color:var(--muted)}
+.reset button{text-decoration:underline;color:var(--muted);padding:6px}
+.reset .confirm{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
+.reset .confirm .danger{color:var(--bad);font-weight:700}
+
+/* play */
+.top{display:flex;align-items:center;gap:12px}
+.icon{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:1.3rem;background:var(--card);border:2px solid var(--line);flex:none}
+.rbar{flex:1;height:14px;border-radius:99px;background:var(--card);border:2px solid var(--line);overflow:hidden}
+.rbar i{display:block;height:100%;width:0;background:var(--sun);border-radius:99px;transition:width .35s}
+.streak{font:600 1.1rem var(--f-disp);min-width:52px;text-align:center;font-variant-numeric:tabular-nums}
+.streak.hot{animation:bump .35s}
+.prompt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;position:relative;min-height:230px}
+.tag{position:absolute;top:12px;inset-inline-start:12px;background:var(--sun);color:#3a2a00;font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:99px}
+.qlabel{margin:0;color:var(--muted);font-size:1rem}
+.qword{font:600 clamp(2.2rem,11vw,3.2rem)/1.15 var(--f-disp);overflow-wrap:anywhere;max-width:100%}
+.qword[lang=he]{font-family:var(--f-body);font-weight:700}
+.speak{display:flex;gap:10px;align-items:center}
+.speak .main{width:auto;padding:0 22px;height:56px;font-size:1.6rem;background:var(--sky);border-color:transparent;color:#fff;box-shadow:0 4px 0 color-mix(in srgb,var(--sky) 60%,#000)}
+.speak .main:active{transform:translateY(3px);box-shadow:none}
+.listen .speak .main{height:96px;padding:0 40px;font-size:2.8rem;border-radius:28px}
+.toast{position:absolute;bottom:14px;font:700 1.3rem var(--f-disp);color:var(--good);opacity:0;transform:translateY(8px);transition:.2s}
+.toast.show{opacity:1;transform:none}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choice{min-height:76px;padding:10px;border-radius:18px;background:var(--card);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);
+  font:600 1.25rem/1.2 var(--f-body);transition:transform .08s,background .15s}
+.choice[lang=en]{font-family:var(--f-disp);font-size:1.35rem}
+.choice:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.choice.ok{background:var(--good-bg);border-color:var(--good);box-shadow:0 4px 0 var(--good);color:var(--ink)}
+.choice.bad{background:var(--bad-bg);border-color:var(--bad);box-shadow:0 4px 0 var(--bad);animation:shake .35s}
+.choices.locked .choice{pointer-events:none}
+.choices.locked .choice:not(.ok):not(.bad){opacity:.45}
+
+/* sheet */
+.sheet{position:fixed;inset:auto 0 0 0;z-index:5;background:var(--card);border-top:3px solid var(--bad);border-radius:24px 24px 0 0;
+  padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  box-shadow:0 -10px 30px rgb(0 0 0 / .15);animation:up .25s ease-out}
+.sheet-in{max-width:448px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.oops{margin:0;color:var(--bad);font:600 1.1rem var(--f-disp)}
+.pair{margin:0;font-size:1.5rem;font-weight:700;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pair [lang=en]{font-size:1.8rem}
+.sheet .row{display:flex;gap:10px}
+.sheet .row .icon{width:60px;height:auto}
+
+/* end */
+.end h2{margin:20px 0 0;font:700 2.2rem/1.1 var(--f-disp);text-align:center}
+.end .card{display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.end p{margin:0}
+.newm{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+
+#fx i{position:fixed;left:50%;top:40%;width:10px;height:14px;border-radius:3px;z-index:9;pointer-events:none;animation:pop 1.1s ease-out forwards}
+@keyframes pop{0%{transform:translate(0,0)}100%{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes bump{50%{transform:scale(1.35)}}
+@keyframes up{from{transform:translateY(100%)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<section id="home" class="screen">
+  <header class="hero">
+    <p class="eyebrow">מתכוננים למבחן באנגלית</p>
+    <h1>המילים של <em>יעל</em></h1>
+  </header>
+  <div class="card">
+    <div class="big"><b id="hMast">0</b><span id="hOf">מתוך 87 מילים שיעל כבר יודעת</span></div>
+    <div class="bar"><i class="m" id="barM"></i><i class="l" id="barL"></i></div>
+    <div class="legend">
+      <span><i class="dot m"></i>יודעת <b id="cM">0</b></span>
+      <span><i class="dot l"></i>בתרגול <b id="cL">0</b></span>
+      <span><i class="dot n"></i>עוד לא ראתה <b id="cN">87</b></span>
+    </div>
+    <div class="meta"><span>⭐ <b id="hXp">0</b> נקודות</span><span>🔥 רצף שיא: <b id="hBest">0</b></span></div>
+  </div>
+  <button id="go" class="btn primary">יאללה, משחקים! ▶</button>
+  <p class="hint" id="hint">כל סיבוב הוא 10 שאלות. מילה שעונים עליה נכון כמה פעמים, בכמה דרכים שונות, יוצאת מהמשחק.</p>
+  <details class="card words"><summary>כל המילים (לחיצה משמיעה)</summary><div id="wlist" class="wlist"></div></details>
+  <div class="reset" id="reset">
+    <button id="rs1">להתחיל מההתחלה</button>
+    <div class="confirm" hidden id="rsc"><span>למחוק את כל ההתקדמות?</span><button class="danger" id="rsYes">כן, למחוק</button><button id="rsNo">ביטול</button></div>
+  </div>
+</section>
+
+<section id="play" class="screen" hidden>
+  <div class="top">
+    <button id="quit" class="icon" aria-label="חזרה למסך הבית">✕</button>
+    <div class="rbar"><i id="rfill"></i></div>
+    <span id="streak" class="streak">🔥 0</span>
+  </div>
+  <div class="card prompt" id="prompt">
+    <span id="qnew" class="tag" hidden>מילה חדשה ✨</span>
+    <p id="qlabel" class="qlabel"></p>
+    <div id="qword" class="qword"></div>
+    <div class="speak" id="speak">
+      <button id="sp" class="icon main" aria-label="השמעה">🔊</button>
+      <button id="spSlow" class="icon" aria-label="השמעה לאט">🐢</button>
+    </div>
+    <div id="toast" class="toast"></div>
+  </div>
+  <div id="choices" class="choices"></div>
+</section>
+
+<section id="end" class="screen end" hidden>
+  <h2 id="eTitle">סיבוב הושלם!</h2>
+  <div class="card">
+    <div class="big"><b id="eOk">0</b><span>מתוך 10 תשובות נכונות</span></div>
+    <p>⭐ +<b id="eXp">0</b> נקודות</p>
+    <p id="eMastT" hidden>מילים שיעל כבר יודעת ויוצאות מהמשחק:</p>
+    <div id="eMast" class="newm"></div>
+    <p id="eProg" class="hint"></p>
+  </div>
+  <button id="again" class="btn primary">עוד סיבוב ▶</button>
+  <button id="home2" class="btn ghost">למסך הבית</button>
+</section>
+
+</div>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-in">
+    <p class="oops">כמעט! בואי נזכור:</p>
+    <p class="pair"><bdi lang="en" dir="ltr" id="shEn"></bdi><span>=</span><span id="shHe"></span></p>
+    <div class="row"><button id="shSay" class="icon" aria-label="השמעה">🔊</button><button id="shNext" class="btn primary">הבנתי, ממשיכים</button></div>
+  </div>
+</div>
+<div id="fx"></div>
+
+<script>
+const RAW = `a hundred|מאה
+a lot of|הרבה
+about|על, בערך
+age|גיל
+also|גם
+April|אפריל
+August|אוגוסט
+bathroom|חדר אמבטיה
+building|בניין
+candy|ממתק
+card|כרטיס, גלויה
+classroom|כיתה
+date|תאריך
+December|דצמבר
+dining room|פינת אוכל
+do|לעשות
+eighteen|שמונה־עשרה (18)
+eighty|שמונים (80)
+end|סוף
+every|כל (כל יום)
+everyone|כולם
+far|רחוק
+February|פברואר
+fifteen|חמש־עשרה (15)
+fifty|חמישים (50)
+flat|דירה
+flour|קמח
+flower|פרח
+for|בשביל, עבור
+forty|ארבעים (40)
+fourteen|ארבע־עשרה (14)
+give|לתת
+goal|שער (גול), מטרה
+guitar|גיטרה
+hear|לשמוע
+her|שלה, אותה
+hobby|תחביב
+I'm sorry|אני מצטערת, סליחה
+Israel|ישראל
+January|ינואר
+July|יולי
+June|יוני
+kick|לבעוט
+like|לאהוב, כמו
+March|מרץ
+market|שוק
+May|מאי
+month|חודש
+nineteen|תשע־עשרה (19)
+ninety|תשעים (90)
+November|נובמבר
+October|אוקטובר
+other|אחר
+outside|בחוץ
+piano|פסנתר
+play|לשחק, לנגן
+present|מתנה
+pretty|יפה
+ready|מוכן
+same|אותו דבר, זהה
+sell|למכור
+September|ספטמבר
+seventeen|שבע־עשרה (17)
+seventy|שבעים (70)
+sixteen|שש־עשרה (16)
+sixty|שישים (60)
+sofa|ספה
+song|שיר
+soon|בקרוב
+special|מיוחד
+student|תלמיד
+study|ללמוד
+subject|מקצוע (בבית ספר)
+sweet|מתוק
+teach|ללמד
+their|שלהם
+then|אז, אחר כך
+thing|דבר
+thirteen|שלוש־עשרה (13)
+thirty|שלושים (30)
+throw|לזרוק
+toilet|שירותים
+trip|טיול
+twenty|עשרים (20)
+village|כפר
+wait|לחכות
+year|שנה`;
+const WORDS = RAW.trim().split('\n').map(l => { const [en, he] = l.split('|'); return {en, he}; });
+const BY = Object.fromEntries(WORDS.map(w => [w.en, w]));
+const NUMS = 'a hundred,thirteen,fourteen,fifteen,sixteen,seventeen,eighteen,nineteen,twenty,thirty,forty,fifty,sixty,seventy,eighty,ninety'.split(',');
+const MONTHS = 'January,February,March,April,May,June,July,August,September,October,November,December'.split(',');
+// Look-alike pairs make the best wrong options: teen/ty, flour/flower, hear/her...
+const TWINS = {};
+[['thirteen','thirty'],['fourteen','forty'],['fifteen','fifty'],['sixteen','sixty'],['seventeen','seventy'],['eighteen','eighty'],['nineteen','ninety'],
+ ['flour','flower'],['hear','her'],['every','everyone'],['June','July'],['study','student'],['study','teach'],['their','then'],['thing','then'],['sell','same'],['soon','song'],['bathroom','classroom'],['dining room','bathroom']]
+  .forEach(([a,b]) => { (TWINS[a] ||= []).push(b); (TWINS[b] ||= []).push(a); });
+const SOUND_SAME = {flour:'flower', flower:'flour'}; // never together when she only hears the word
+const group = en => NUMS.includes(en) ? 'n' : MONTHS.includes(en) ? 'm' : null;
+
+const MASTER = 4, GAP = [2, 3, 5, 8], POOL = 7, ROUND = 10;
+// level -> question type. 0: read English, pick Hebrew. 1: hear, pick Hebrew. 2: see Hebrew, pick English. 3: hear, pick Hebrew.
+const MODES = ['en2he', 'listen', 'he2en', 'listen'];
+const LABEL = {en2he: 'מה זה בעברית?', listen: 'הקשיבי. מה הפירוש?', he2en: 'איך אומרים באנגלית?'};
+const PRAISE = ['מעולה!', 'יפה מאוד!', 'אלופה!', 'בדיוק!', 'וואו!', 'כל הכבוד!', 'נכון!'];
+
+const KEY = 'yael-words-v1';
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+S ||= {w: {}, xp: 0, best: 0, turn: 0, prev: null};
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+const st = w => S.w[w.en] ||= {l: 0, seen: 0, last: -99};
+
+const $ = s => document.querySelector(s);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const rnd = a => a[Math.random() * a.length | 0];
+
+// ---------- spaced repetition ----------
+function pick() {
+  const t = S.turn;
+  const learningAll = WORDS.filter(w => st(w).seen && st(w).l < MASTER);
+  const learning = learningAll.filter(w => w.en !== S.prev);
+  const fresh = WORDS.filter(w => !st(w).seen);
+  const due = learning.filter(w => t - st(w).last >= GAP[st(w).l])
+    .sort((a, b) => st(a).l - st(b).l || st(a).last - st(b).last);
+  const room = learningAll.length < POOL;
+  if (due.length && !(room && fresh.length && Math.random() < .35)) return due[0];
+  if (fresh.length && room) return rnd(fresh);
+  if (learning.length) return learning.sort((a, b) => st(a).last - st(b).last)[0];
+  if (learningAll.length) return learningAll[0];
+  if (fresh.length) return rnd(fresh);
+  // everything mastered: quiet review, oldest first
+  return WORDS.filter(w => w.en !== S.prev).sort((a, b) => st(a).last - st(b).last)[0];
+}
+
+function options(w, mode) {
+  const listen = mode === 'listen', picks = [];
+  const ok = x => x && x !== w && !picks.includes(x) && !(listen && SOUND_SAME[w.en] === x.en);
+  const add = (x, max = 3) => { if (picks.length < max && ok(x)) picks.push(x); };
+  shuffle(TWINS[w.en] || []).forEach(e => Math.random() < .8 && add(BY[e], 2));
+  const g = group(w.en);
+  if (g) shuffle(WORDS.filter(x => group(x.en) === g)).forEach(x => add(x, 2));
+  shuffle(WORDS).forEach(x => add(x));
+  return shuffle([w, ...picks]);
+}
+
+// ---------- sound ----------
+try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {} // play through iPhone silent switch
+const canSpeak = 'speechSynthesis' in window;
+let voice, AC;
+function pickVoice() {
+  if (!canSpeak) return;
+  const v = speechSynthesis.getVoices().filter(x => /^en[-_]/i.test(x.lang));
+  voice = v.find(x => /en[-_]US/i.test(x.lang) && /Samantha|Google US|Aria|Jenny|Ava|Allison/i.test(x.name))
+       || v.find(x => /en[-_]US/i.test(x.lang)) || v[0];
+}
+if (canSpeak) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function say(text, slow) {
+  if (!canSpeak) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; if (voice) u.voice = voice;
+    u.rate = slow ? .5 : .85;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function unlock() {
+  try { AC ||= new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) {}
+  try { if (canSpeak) { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } } catch (e) {}
+}
+function tone(freqs, type = 'triangle') {
+  if (!AC) return;
+  const t0 = AC.currentTime;
+  freqs.forEach((f, i) => {
+    const o = AC.createOscillator(), g = AC.createGain(), t = t0 + i * .1;
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.35, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .28);
+    o.connect(g).connect(AC.destination); o.start(t); o.stop(t + .3);
+  });
+}
+
+// ---------- screens ----------
+function show(id) { ['home', 'play', 'end'].forEach(s => $('#' + s).hidden = s !== id); window.scrollTo(0, 0); }
+function counts() {
+  let m = 0, l = 0;
+  WORDS.forEach(w => { const s = S.w[w.en]; if (s?.seen) s.l >= MASTER ? m++ : l++; });
+  return {m, l, n: WORDS.length - m - l};
+}
+function renderHome() {
+  const c = counts(), N = WORDS.length;
+  $('#hMast').textContent = c.m; $('#cM').textContent = c.m; $('#cL').textContent = c.l; $('#cN').textContent = c.n;
+  $('#hOf').textContent = `מתוך ${N} מילים שיעל כבר יודעת`;
+  $('#barM').style.width = c.m / N * 100 + '%'; $('#barL').style.width = c.l / N * 100 + '%';
+  $('#hXp').textContent = S.xp; $('#hBest').textContent = S.best;
+  const all = c.m === N;
+  $('#go').textContent = all ? 'חזרה כללית לפני המבחן ▶' : S.turn ? 'ממשיכים לשחק ▶' : 'יאללה, משחקים! ▶';
+  $('#hint').textContent = all ? '🏆 יעל יודעת את כל המילים! אפשר לעשות עוד חזרה לפני המבחן.'
+    : 'כל סיבוב הוא 10 שאלות. מילה שעונים עליה נכון כמה פעמים, בכמה דרכים שונות, יוצאת מהמשחק.';
+  $('#wlist').innerHTML = WORDS.map((w, i) => {
+    const s = S.w[w.en], cls = !s?.seen ? '' : s.l >= MASTER ? 'm' : 'l';
+    return `<button class="chip ${cls}" data-i="${i}"><span lang="en" dir="ltr">${w.en}</span><span>${w.he}</span></button>`;
+  }).join('');
+  show('home');
+}
+$('#wlist').addEventListener('click', e => { const b = e.target.closest('.chip'); if (b) say(WORDS[b.dataset.i].en); });
+
+let round, cur, mode, busy;
+function startRound() {
+  unlock();
+  round = {n: 0, ok: 0, xp: 0, mast: [], streak: 0};
+  $('#streak').textContent = '🔥 0';
+  show('play');
+  next();
+}
+function next() {
+  $('#sheet').hidden = true;
+  if (round.n >= ROUND) return endRound();
+  cur = pick();
+  const s = st(cur);
+  mode = MODES[Math.min(s.l, 3)];
+  if (mode === 'listen' && !canSpeak) mode = 'en2he';
+  busy = false;
+  $('#rfill').style.width = round.n / ROUND * 100 + '%';
+  $('#qnew').hidden = !!s.seen;
+  $('#qlabel').textContent = LABEL[mode];
+  $('#prompt').classList.toggle('listen', mode === 'listen');
+  const q = $('#qword');
+  q.hidden = mode === 'listen';
+  q.textContent = mode === 'he2en' ? cur.he : cur.en;
+  q.lang = mode === 'he2en' ? 'he' : 'en'; q.dir = mode === 'he2en' ? 'rtl' : 'ltr';
+  $('#speak').hidden = mode === 'he2en' || !canSpeak;
+  $('#toast').className = 'toast';
+  const box = $('#choices');
+  box.className = 'choices';
+  box.innerHTML = '';
+  options(cur, mode).forEach(w => {
+    const b = document.createElement('button');
+    b.className = 'choice';
+    if (mode === 'he2en') { b.lang = 'en'; b.dir = 'ltr'; b.textContent = w.en; } else b.textContent = w.he;
+    b.onclick = () => answer(w, b);
+    b._w = w;
+    box.appendChild(b);
+  });
+  if (mode !== 'he2en') setTimeout(() => say(cur.en), 250);
+}
+function answer(w, btn) {
+  if (busy) return; busy = true;
+  const ok = w === cur, s = st(cur), first = !s.seen, before = s.l;
+  const box = $('#choices');
+  box.classList.add('locked');
+  [...box.children].forEach(b => { if (b._w === cur) b.classList.add('ok'); });
+  if (!ok) btn.classList.add('bad');
+  s.seen++; s.last = S.turn++; S.prev = cur.en; round.n++;
+  if (ok) {
+    s.l = Math.min(MASTER, s.l + (first ? 3 : 1)); // knew it on first sight -> one listening check and it's out
+    round.ok++; round.streak++;
+    const gain = 10 + (round.streak >= 3 ? 5 : 0);
+    S.xp += gain; round.xp += gain; S.best = Math.max(S.best, round.streak);
+  } else {
+    s.l = Math.max(0, s.l - 2);
+    round.streak = 0;
+  }
+  save();
+  const st_ = $('#streak');
+  st_.textContent = '🔥 ' + round.streak; st_.classList.remove('hot'); void st_.offsetWidth; if (ok) st_.classList.add('hot');
+  $('#rfill').style.width = round.n / ROUND * 100 + '%';
+  const q = $('#qword');
+  if (mode === 'listen') { q.hidden = false; }
+  $('#speak').hidden = !canSpeak;
+  const mastered = ok && before < MASTER && s.l >= MASTER;
+  if (ok) {
+    tone(mastered ? [523, 659, 784, 1047] : [660, 990]);
+    if (mastered) { round.mast.push(cur); confetti(); }
+    const t = $('#toast');
+    t.textContent = mastered ? '⭐ את יודעת את המילה הזאת!' : rnd(PRAISE) + (round.streak >= 3 ? ` +15` : ' +10');
+    t.className = 'toast show';
+    if (mode !== 'en2he') setTimeout(() => say(cur.en), 300);
+    setTimeout(next, mastered ? 1700 : 1100);
+  } else {
+    tone([330, 220], 'sine');
+    $('#shEn').textContent = cur.en; $('#shHe').textContent = cur.he;
+    $('#sheet').hidden = false;
+    setTimeout(() => say(cur.en), 350);
+  }
+}
+function endRound() {
+  const c = counts();
+  $('#eTitle').textContent = round.ok >= 9 ? 'סיבוב מושלם! 🏆' : round.ok >= 6 ? 'סיבוב מעולה! 🎉' : 'סיבוב הושלם! 💪';
+  $('#eOk').textContent = round.ok; $('#eXp').textContent = round.xp;
+  $('#eMastT').hidden = !round.mast.length;
+  $('#eMast').innerHTML = round.mast.map(w => `<span class="chip m"><span lang="en" dir="ltr">${w.en}</span><span>${w.he}</span></span>`).join('');
+  $('#eProg').textContent = `יעל יודעת ${c.m} מתוך ${WORDS.length} מילים` + (c.m === WORDS.length ? '. כל המילים! 🏆' : '');
+  if (round.ok >= 8) confetti();
+  tone([523, 659, 784]);
+  show('end');
+}
+function confetti() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const colors = ['var(--accent)', 'var(--sun)', 'var(--good)', 'var(--sky)'];
+  for (let i = 0; i < 36; i++) {
+    const p = document.createElement('i');
+    p.style.cssText = `--x:${(Math.random() - .5) * 380}px;--y:${(Math.random() - .7) * 520}px;--r:${Math.random() * 900}deg;background:${colors[i % 4]}`;
+    $('#fx').appendChild(p);
+    setTimeout(() => p.remove(), 1200);
+  }
+}
+
+$('#go').onclick = startRound;
+$('#again').onclick = startRound;
+$('#home2').onclick = renderHome;
+$('#quit').onclick = () => { $('#sheet').hidden = true; renderHome(); };
+$('#sp').onclick = () => say(cur.en);
+$('#spSlow').onclick = () => say(cur.en, true);
+$('#shSay').onclick = () => say(cur.en);
+$('#shNext').onclick = next;
+$('#rs1').onclick = () => { $('#rs1').hidden = true; $('#rsc').hidden = false; };
+$('#rsNo').onclick = () => { $('#rs1').hidden = false; $('#rsc').hidden = true; };
+$('#rsYes').onclick = () => { S = {w: {}, xp: 0, best: 0, turn: 0, prev: null}; save(); $('#rsNo').onclick(); renderHome(); };
+renderHome();
+</script>
+</body>
+</html>
