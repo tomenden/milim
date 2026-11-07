@@ -370,10 +370,9 @@ const loadBuf = name => bufs[name] ||= fetch('audio/' + name + '.mp3')
   .catch(e => { delete bufs[name]; throw e; });
 function say(text, slow) {
   if (!AC) return tts(text, slow);
-  if (AC.state === 'suspended') AC.resume();
+  wake();
   loadBuf(slug(text) + (slow ? '-slow' : '')).then(buf => {
     try { playing?.stop(); } catch (e) {}
-    try { if (canSpeak) speechSynthesis.cancel(); } catch (e) {}
     const s = AC.createBufferSource(), g = AC.createGain();
     g.gain.value = 1.6;
     s.buffer = buf; s.connect(g).connect(AC.destination); s.start();
@@ -391,11 +390,20 @@ function tts(text, slow) {
   } catch (e) {}
 }
 function unlock() {
-  try { AC ||= new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) {}
-  try { if (canSpeak) { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } } catch (e) {}
+  // No TTS warm-up here: on iOS any speechSynthesis call grabs the audio session and leaves AC 'interrupted'.
+  try {
+    AC ||= new (window.AudioContext || window.webkitAudioContext)();
+    wake();
+    const s = AC.createBufferSource(); s.buffer = AC.createBuffer(1, 1, 22050); s.connect(AC.destination); s.start(0);
+  } catch (e) {}
 }
+// 'interrupted' (iOS) and 'suspended' both need resume(); any tap is a valid gesture to do it.
+function wake() { try { if (AC && AC.state !== 'running') AC.resume(); } catch (e) {} }
+document.addEventListener('pointerdown', wake, true);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
 function tone(freqs, type = 'triangle') {
   if (!AC) return;
+  wake();
   const t0 = AC.currentTime;
   freqs.forEach((f, i) => {
     const o = AC.createOscillator(), g = AC.createGain(), t = t0 + i * .1;
