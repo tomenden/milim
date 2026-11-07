@@ -360,7 +360,27 @@ function pickVoice() {
        || v.find(x => /en[-_]US/i.test(x.lang)) || v[0];
 }
 if (canSpeak) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+// Recorded files first: phones (esp. set to Hebrew) often have no English TTS voice.
+const slug = en => en.toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, '');
+const bufs = {};
+let playing;
+const loadBuf = name => bufs[name] ||= fetch('audio/' + name + '.mp3')
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+  .then(b => new Promise((res, rej) => AC.decodeAudioData(b, res, rej)))
+  .catch(e => { delete bufs[name]; throw e; });
 function say(text, slow) {
+  if (!AC) return tts(text, slow);
+  if (AC.state === 'suspended') AC.resume();
+  loadBuf(slug(text) + (slow ? '-slow' : '')).then(buf => {
+    try { playing?.stop(); } catch (e) {}
+    try { if (canSpeak) speechSynthesis.cancel(); } catch (e) {}
+    const s = AC.createBufferSource(), g = AC.createGain();
+    g.gain.value = 1.6;
+    s.buffer = buf; s.connect(g).connect(AC.destination); s.start();
+    playing = s;
+  }).catch(() => tts(text, slow));
+}
+function tts(text, slow) {
   if (!canSpeak) return;
   try {
     speechSynthesis.cancel();
@@ -408,7 +428,7 @@ function renderHome() {
   }).join('');
   show('home');
 }
-$('#wlist').addEventListener('click', e => { const b = e.target.closest('.chip'); if (b) say(WORDS[b.dataset.i].en); });
+$('#wlist').addEventListener('click', e => { const b = e.target.closest('.chip'); if (b) { unlock(); say(WORDS[b.dataset.i].en); } });
 
 let round, cur, mode, busy;
 function startRound() {
@@ -424,7 +444,6 @@ function next() {
   cur = pick();
   const s = st(cur);
   mode = MODES[Math.min(s.l, 3)];
-  if (mode === 'listen' && !canSpeak) mode = 'en2he';
   busy = false;
   $('#rfill').style.width = round.n / ROUND * 100 + '%';
   $('#qnew').hidden = !!s.seen;
@@ -434,7 +453,7 @@ function next() {
   q.hidden = mode === 'listen';
   q.textContent = mode === 'he2en' ? cur.he : cur.en;
   q.lang = mode === 'he2en' ? 'he' : 'en'; q.dir = mode === 'he2en' ? 'rtl' : 'ltr';
-  $('#speak').hidden = mode === 'he2en' || !canSpeak;
+  $('#speak').hidden = mode === 'he2en';
   $('#toast').className = 'toast';
   const box = $('#choices');
   box.className = 'choices';
@@ -472,7 +491,7 @@ function answer(w, btn) {
   $('#rfill').style.width = round.n / ROUND * 100 + '%';
   const q = $('#qword');
   if (mode === 'listen') { q.hidden = false; }
-  $('#speak').hidden = !canSpeak;
+  $('#speak').hidden = false;
   const mastered = ok && before < MASTER && s.l >= MASTER;
   if (ok) {
     tone(mastered ? [523, 659, 784, 1047] : [660, 990]);
