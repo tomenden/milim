@@ -320,6 +320,61 @@ S ||= {w: {}, xp: 0, best: 0, turn: 0, prev: null};
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
 const st = w => S.w[w.en] ||= {l: 0, seen: 0, last: -99};
 
+/* ---------- progress sync ---------- */
+// KidSync: progress that follows the kid across browsers (WhatsApp's in-app browser, Chrome, Safari) and devices.
+// Copy this file's contents into the game's <script>. Personal link: https://tomenden.github.io/<game>/#<code>
+// The code is remembered locally, so later opens without the #code keep working in that browser.
+globalThis.KidSync = (game, api = 'https://kids-sync.enden-tom.workers.dev') => {
+  const KEY = 'kidsync-code', VALID = /^[a-z0-9-]{6,40}$/;
+  const fromHash = decodeURIComponent(location.hash.slice(1)).trim().toLowerCase();
+  let code = VALID.test(fromHash) ? fromHash : null;
+  try { if (code) localStorage.setItem(KEY, code); else code = localStorage.getItem(KEY); } catch (e) {}
+  const url = () => `${api}/${game}/${code}`;
+  return {
+    get code() { return code; },
+    setCode(c) {
+      c = String(c).trim().toLowerCase();
+      if (!VALID.test(c)) return false;
+      code = c;
+      try { localStorage.setItem(KEY, c); } catch (e) {}
+      return true;
+    },
+    // Remote state, or null when there is no code, no network, or nothing saved yet.
+    async load() {
+      if (!code) return null;
+      try { const r = await fetch(url(), {cache: 'no-store'}); return r.ok ? await r.json() : null; } catch (e) { return null; }
+    },
+    // Fire-and-forget. text/plain body keeps it a CORS "simple request" (no preflight); keepalive survives page close.
+    save(state) {
+      if (!code) return;
+      try { fetch(url(), {method: 'PUT', body: JSON.stringify(state), keepalive: true}).catch(() => {}); } catch (e) {}
+    },
+  };
+};
+const sync = KidSync('milim');
+// Keeps both sides' gains: per word the record with more practice wins, totals take the max.
+function mergeState(a, b) {
+  if (!b || !b.w) return a;
+  const m = {...a, w: {...a.w}};
+  for (const [k, y] of Object.entries(b.w)) { const x = m.w[k]; if (!x || y.seen > x.seen || (y.seen === x.seen && y.l > x.l)) m.w[k] = y; }
+  m.xp = Math.max(a.xp || 0, b.xp || 0); m.best = Math.max(a.best || 0, b.best || 0);
+  if ((b.turn || 0) > (a.turn || 0)) { m.turn = b.turn; m.prev = b.prev; }
+  return m;
+}
+// The server is written only after a successful read, so a dropped connection can never replace her progress with less.
+let remoteOK = false;
+async function pullSync() {
+  if (!sync.code) return;
+  try {
+    const r = await fetch(`https://kids-sync.enden-tom.workers.dev/milim/${sync.code}`, {cache: 'no-store'});
+    if (!r.ok) return;
+    const remote = await r.json(); remoteOK = true;
+    if (remote) { S = mergeState(S, remote); save(); if (!$('#home').hidden) renderHome(); }
+    sync.save(S); // first open with a code uploads what this browser had
+  } catch (e) {}
+}
+const pushSync = () => { if (!sync.code) return; if (!remoteOK) return pullSync(); sync.save(S); };
+
 const $ = s => document.querySelector(s);
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const rnd = a => a[Math.random() * a.length | 0];
@@ -521,6 +576,7 @@ function answer(w, btn) {
   }
 }
 function endRound() {
+  pushSync();
   const c = counts();
   $('#eTitle').textContent = round.ok >= 9 ? 'סיבוב מושלם! 🏆' : round.ok >= 6 ? 'סיבוב מעולה! 🎉' : 'סיבוב הושלם! 💪';
   $('#eOk').textContent = round.ok; $('#eXp').textContent = round.xp;
@@ -552,8 +608,9 @@ $('#shSay').onclick = () => say(cur.en);
 $('#shNext').onclick = next;
 $('#rs1').onclick = () => { $('#rs1').hidden = true; $('#rsc').hidden = false; };
 $('#rsNo').onclick = () => { $('#rs1').hidden = false; $('#rsc').hidden = true; };
-$('#rsYes').onclick = () => { S = {w: {}, xp: 0, best: 0, turn: 0, prev: null}; save(); $('#rsNo').onclick(); renderHome(); };
+$('#rsYes').onclick = () => { S = {w: {}, xp: 0, best: 0, turn: 0, prev: null}; save(); sync.save(S); $('#rsNo').onclick(); renderHome(); };
 renderHome();
+pullSync();
 </script>
 </body>
 </html>
