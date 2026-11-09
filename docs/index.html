@@ -38,6 +38,8 @@ body{background:var(--bg);background-image:radial-gradient(var(--dot) 1.5px,tran
 .app{max-width:480px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;
   padding-block:14px 18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .screen{display:flex;flex-direction:column;gap:14px;flex:1}
+.studio{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;background:var(--card);border:1px solid var(--line);color:var(--ink);text-decoration:none;font:600 15px var(--f-disp);margin-bottom:6px}
+.studio svg{width:18px;height:18px}
 [hidden]{display:none!important}
 [lang=en]{font-family:var(--f-disp)}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
@@ -138,6 +140,7 @@ details[open].words summary::after{content:"▴"}
 
 <section id="home" class="screen">
   <header class="hero">
+    <a id="studio" class="studio" href="/studio/" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>הסטודיו</a>
     <p class="eyebrow">מתכוננים למבחן באנגלית</p>
     <h1>המילים של <em>יעל</em></h1>
   </header>
@@ -310,6 +313,7 @@ const LABEL = {en2he: 'מה זה בעברית?', listen: 'הקשיבי. מה ה�
 const PRAISE = ['מעולה!', 'יפה מאוד!', 'אלופה!', 'בדיוק!', 'וואו!', 'כל הכבוד!', 'נכון!'];
 
 const KEY = 'yael-words-v1';
+if (/YaelStudio/.test(navigator.userAgent) || document.referrer.includes('/studio/')) document.getElementById('studio').hidden = false;
 let S;
 try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
 S ||= {w: {}, xp: 0, best: 0, turn: 0, prev: null};
