@@ -359,6 +359,8 @@ function mergeState(a, b) {
   for (const [k, y] of Object.entries(b.w)) { const x = m.w[k]; if (!x || y.seen > x.seen || (y.seen === x.seen && y.l > x.l)) m.w[k] = y; }
   m.xp = Math.max(a.xp || 0, b.xp || 0); m.best = Math.max(a.best || 0, b.best || 0);
   if ((b.turn || 0) > (a.turn || 0)) { m.turn = b.turn; m.prev = b.prev; }
+  m.log = {...a.log};
+  for (const [d, e] of Object.entries(b.log || {})) { const x = m.log[d] || {}; m.log[d] = {ans: Math.max(x.ans || 0, e.ans || 0), sec: Math.max(x.sec || 0, e.sec || 0)}; }
   return m;
 }
 // The server is written only after a successful read, so a dropped connection can never replace her progress with less.
@@ -372,6 +374,13 @@ async function pullSync() {
     if (remote) { S = mergeState(S, remote); save(); if (!$('#home').hidden) renderHome(); }
     sync.save(S); // first open with a code uploads what this browser had
   } catch (e) {}
+}
+// Time log for the parents' page: answers and seconds of practice per day (a gap over 2 minutes counts as 5 seconds).
+let lastAnsAt = 0;
+function logAns() {
+  const d = new Date(), day = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const L = S.log ||= {}, e = L[day] ||= {ans: 0, sec: 0}, now = Date.now(), gap = now - lastAnsAt;
+  e.ans++; e.sec = Math.round(e.sec + (lastAnsAt && gap < 120000 ? Math.min(30, gap / 1000) : 5)); lastAnsAt = now;
 }
 const pushSync = () => { if (!sync.code) return; if (!remoteOK) return pullSync(); sync.save(S); };
 
@@ -542,7 +551,7 @@ function answer(w, btn) {
   box.classList.add('locked');
   [...box.children].forEach(b => { if (b._w === cur) b.classList.add('ok'); });
   if (!ok) btn.classList.add('bad');
-  s.seen++; s.last = S.turn++; S.prev = cur.en; round.n++;
+  s.seen++; s.last = S.turn++; logAns(); S.prev = cur.en; round.n++;
   if (ok) {
     s.l = Math.min(MASTER, s.l + (first ? 3 : 1)); // knew it on first sight -> one listening check and it's out
     round.ok++; round.streak++;
